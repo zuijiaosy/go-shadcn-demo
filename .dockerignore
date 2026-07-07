@@ -1,0 +1,33 @@
+# Git
+.git/
+.gitignore
+
+# Build outputs
+app
+tmp/
+frontend/dist/
+
+# Frontend dev files
+frontend/node_modules/
+node_modules/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+
+# Docs
+*.md
+
+# Dev config
+.air.toml
+.env
+.env.example
+
+# CI
+.github/
+
+# Embedded frontend（Docker 构建阶段重新生成）
+internal/api/frontend/

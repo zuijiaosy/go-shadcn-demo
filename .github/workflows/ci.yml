@@ -1,0 +1,56 @@
+# 持续集成：前端 lint/构建 → 嵌入产物 → Go 检查/测试/编译
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    name: Build & Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: 前端 Lint 与构建
+        working-directory: frontend
+        run: |
+          npm ci
+          npm run lint
+          npm run build
+
+      - name: 嵌入前端构建产物
+        run: |
+          rm -rf internal/api/frontend/dist
+          mkdir -p internal/api/frontend/dist
+          cp -r frontend/dist/. internal/api/frontend/dist/
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.24'
+
+      - name: Go 格式检查
+        run: |
+          UNFORMATTED=$(gofmt -l .)
+          if [ -n "$UNFORMATTED" ]; then
+            echo "以下文件未通过 gofmt 检查:"
+            echo "$UNFORMATTED"
+            exit 1
+          fi
+
+      - name: Go Vet
+        run: go vet ./...
+
+      - name: Go 测试
+        run: go test -v ./...
+
+      - name: 编译二进制
+        run: go build -o app ./cmd/server

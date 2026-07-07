@@ -1,0 +1,43 @@
+# Go
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+app
+tmp/
+
+# Go vendor
+vendor/
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+node_modules/
+
+# Embedded frontend（由 scripts/setup-dev.sh 生成，仅保留占位文件）
+internal/api/frontend/dist/*
+!internal/api/frontend/dist/.gitkeep
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Environment
+.env
+.env.local
+
+# oh-my-claudecode 状态目录
+.omc/
